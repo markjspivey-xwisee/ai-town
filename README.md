@@ -15,6 +15,30 @@ This project is a deployable starter kit for easily building and customizing you
 The primary goal of this project, beyond just being a lot of fun to work on, is to provide a platform with a strong foundation that is meant to be extended. The back-end engine natively supports shared global state, transactions, and a journal of all events so should be suitable for everything from a simple project to play around with to a scalable, multi-player game. A secondary goal is to make a JS/TS framework available as most simulators in this space (including the original paper above) are written in Python.
 
 
+## Autonomous OANDA Crypto Trader
+
+In addition to the social simulation, AI Town now ships with an autonomous crypto trading agent that integrates directly with [OANDA](https://www.oanda.com/). The trader runs entirely inside Convex using scheduled evaluations and can be controlled from the **Trader** dashboard at `/trader`.
+
+**Highlights**
+
+- Momentum-based strategy with configurable moving averages, stop loss and take profit multipliers.
+- Automatic order execution through OANDA practice or live accounts.
+- Rich activity log, manual tick triggering, and optional flatting of open positions on stop.
+
+### Broker configuration
+
+Add the following environment variables to your Convex deployment (or `.env.local`) before starting a session:
+
+```
+OANDA_API_KEY=your-rest-token
+OANDA_ACCOUNT_ID=your-account-id
+# Optional: override base URL (defaults to the OANDA practice API)
+OANDA_API_URL=https://api-fxpractice.oanda.com/v3
+```
+
+Once configured, visit `/trader`, create a session, and click **Start** to let the agent trade autonomously. The backend evaluates active sessions every minute via a Convex cron job.
+
+
 ## Overview
 
 - 💻 [Stack](#stack)
