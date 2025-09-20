@@ -159,4 +159,5 @@ crons.interval('vacuum old memory entries', { hours: 6 }, internal.crons.vacuumO
   cursor: null,
   soFar: 0,
 });
+crons.interval('evaluate trading sessions', { minutes: 1 }, internal.trader.tickActiveSessions, {});
 export default crons;

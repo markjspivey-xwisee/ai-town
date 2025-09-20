@@ -38,6 +38,7 @@ import type * as journal from "../journal";
 import type * as lib_cached_llm from "../lib/cached_llm";
 import type * as lib_memory from "../lib/memory";
 import type * as lib_migrations from "../lib/migrations";
+import type * as lib_oanda from "../lib/oanda";
 import type * as lib_openai from "../lib/openai";
 import type * as lib_physics from "../lib/physics";
 import type * as lib_pinecone from "../lib/pinecone";
@@ -46,6 +47,7 @@ import type * as lib_utils from "../lib/utils";
 import type * as maps_firstmap from "../maps/firstmap";
 import type * as players from "../players";
 import type * as testing from "../testing";
+import type * as trader from "../trader";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -80,6 +82,7 @@ declare const fullApi: ApiFromModules<{
   "lib/cached_llm": typeof lib_cached_llm;
   "lib/memory": typeof lib_memory;
   "lib/migrations": typeof lib_migrations;
+  "lib/oanda": typeof lib_oanda;
   "lib/openai": typeof lib_openai;
   "lib/physics": typeof lib_physics;
   "lib/pinecone": typeof lib_pinecone;
@@ -88,6 +91,7 @@ declare const fullApi: ApiFromModules<{
   "maps/firstmap": typeof maps_firstmap;
   players: typeof players;
   testing: typeof testing;
+  trader: typeof trader;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

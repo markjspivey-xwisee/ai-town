@@ -1,4 +1,5 @@
-import { SignedIn, SignedOut, UserButton, auth } from '@clerk/nextjs';
+import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import Link from 'next/link';
 import GameWrapper from '@/components/GameWrapper';
 import FreezeButton from '@/components/FreezeButton';
 import LoginButton from '@/components/LoginButton';
@@ -24,6 +25,13 @@ export default function Home() {
         <p className="mx-auto my-4 text-center text-xl sm:text-2xl text-white leading-tight shadow-solid">
           A virtual town where AI characters live, chat and socialize.
         </p>
+
+        <Link
+          href="/trader"
+          className="inline-flex items-center gap-3 px-6 py-3 mt-2 text-lg text-white border border-clay-500 rounded-xl bg-clay-800/80 hover:bg-clay-700 transition"
+        >
+          🚀 Launch the Autonomous OANDA Trader
+        </Link>
 
         <GameWrapper />
 

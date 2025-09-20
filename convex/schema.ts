@@ -200,6 +200,71 @@ export const Characters = Table('characters', {
 });
 export type SpritesheetData = Infer<(typeof Characters.fields)['spritesheetData']>;
 
+const TradingStatus = v.union(
+  v.literal('draft'),
+  v.literal('running'),
+  v.literal('stopped'),
+  v.literal('error'),
+);
+export const TradingSignal = v.union(v.literal('long'), v.literal('short'), v.literal('neutral'));
+export type TradingSignal = Infer<typeof TradingSignal>;
+export const TradingDirection = v.union(v.literal('long'), v.literal('short'));
+export type TradingDirection = Infer<typeof TradingDirection>;
+
+export const TraderSessions = Table('traderSessions', {
+  name: v.string(),
+  instrument: v.string(),
+  granularity: v.string(),
+  shortWindow: v.number(),
+  longWindow: v.number(),
+  tradeUnits: v.number(),
+  takeProfitMultiplier: v.number(),
+  stopLossMultiplier: v.number(),
+  neutralThreshold: v.number(),
+  status: TradingStatus,
+  lastSignal: TradingSignal,
+  lastShortMA: v.optional(v.number()),
+  lastLongMA: v.optional(v.number()),
+  lastPrice: v.optional(v.number()),
+  lastEvaluationTime: v.optional(v.number()),
+  createdAt: v.number(),
+  updatedAt: v.number(),
+  errorMessage: v.optional(v.string()),
+});
+export type TraderSession = Infer<typeof TraderSessions.doc>;
+
+export const TraderLogs = Table('traderLogs', {
+  sessionId: v.id('traderSessions'),
+  level: v.union(
+    v.literal('info'),
+    v.literal('warn'),
+    v.literal('error'),
+    v.literal('analysis'),
+    v.literal('trade'),
+  ),
+  message: v.string(),
+  details: v.optional(v.any()),
+  createdAt: v.number(),
+});
+export type TraderLog = Infer<typeof TraderLogs.doc>;
+
+export const TraderPositions = Table('traderPositions', {
+  sessionId: v.id('traderSessions'),
+  direction: TradingDirection,
+  units: v.number(),
+  entryPrice: v.number(),
+  takeProfitPrice: v.optional(v.number()),
+  stopLossPrice: v.optional(v.number()),
+  status: v.union(v.literal('open'), v.literal('closing'), v.literal('closed')),
+  oandaTradeId: v.optional(v.string()),
+  openedAt: v.number(),
+  closedAt: v.optional(v.number()),
+  exitPrice: v.optional(v.number()),
+  realizedPnl: v.optional(v.number()),
+  closeReason: v.optional(v.string()),
+});
+export type TraderPosition = Infer<typeof TraderPositions.doc>;
+
 // Hierarchical location within tree
 // Future: build zone lookup from position, whether player-dependent or global.
 // export const Zones = Table('zones', {
@@ -274,6 +339,15 @@ export default defineSchema(
     // Something for messages to associate with, can store
     // read-only metadata here in the future.
     conversations: defineTable({ worldId: v.id('worlds') }).index('by_worldId', ['worldId']),
+
+    traderSessions: TraderSessions.table
+      .index('by_status', ['status'])
+      .index('by_instrument', ['instrument']),
+    traderLogs: TraderLogs.table.index('by_sessionId', ['sessionId']),
+    traderPositions: TraderPositions.table
+      .index('by_session_status', ['sessionId', 'status'])
+      .index('by_session', ['sessionId'])
+      .index('by_oandaTradeId', ['oandaTradeId']),
 
     heartbeats: defineTable({}),
   },
